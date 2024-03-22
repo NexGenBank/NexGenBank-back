@@ -41,9 +41,18 @@ _____
 
 > Directly run this file in your sql sheel: [sqlRun](src/main/resources/sqlRun.sql)
 
-- VIA FLYWAY MIGRATION:
+- VIA FLYWAY MIGRATION METHOD:
 
-> Pending...
+> Create dadabase first:
+> >CREATE DATABASE IF NOT EXISTS nexgenbank;
+>
+> Customize this connection  information and execute the command in your maven terminal
+> 
+> >mvn flyway:migrate -Dflyway.url=jdbc:postgresql://localhost:5432/nexgenbank -Dflyway.user=your_username -Dflyway.password=your_password -Dflyway.baselineOnMigrate=true -Dflyway.cleanDisabled=true
+> 
+> ex:
+> 
+> > mvn flyway:migrate -Dflyway.url=jdbc:postgresql://localhost:5432/nexgenbank -Dflyway.user=postgres -Dflyway.password=12345678 -Dflyway.baselineOnMigrate=true -Dflyway.cleanDisabled=true
 
 ## OpenAPI-Explorer:
 
