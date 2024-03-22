@@ -42,11 +42,11 @@ public class UserRepository implements BasicRepository<User>{
                 String query = "INSERT INTO \"User\" (name, first_name, email, birth_date, phone_number, monthly_net_salary) VALUES (?, ?, ?, ?, ?, ?)";
                 PreparedStatement preparedStatement = conn.prepareStatement(query);
                 preparedStatement.setString(1, user.getName());
-                preparedStatement.setString(2, user.getFirst_name());
+                preparedStatement.setString(2, user.getFirstName());
                 preparedStatement.setString(3, user.getEmail());
-                preparedStatement.setDate(4, new java.sql.Date(user.getBirth_date().getTime()));
-                preparedStatement.setString(5, user.getPhone_number());
-                preparedStatement.setDouble(6, user.getMonthly_net_salary());
+                preparedStatement.setDate(4, new java.sql.Date(user.getBirthDate().getTime()));
+                preparedStatement.setString(5, user.getPhoneNumber());
+                preparedStatement.setDouble(6, user.getMonthlyNetSalary());
                 preparedStatement.executeUpdate();
                 savedUsers.add(user);
             }
@@ -62,11 +62,11 @@ public class UserRepository implements BasicRepository<User>{
             String query = "INSERT INTO \"User\" (name, first_name, email, birth_date, phone_number, monthly_net_salary) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, toSave.getName());
-            preparedStatement.setString(2, toSave.getFirst_name());
+            preparedStatement.setString(2, toSave.getFirstName());
             preparedStatement.setString(3, toSave.getEmail());
-            preparedStatement.setDate(4, new java.sql.Date(toSave.getBirth_date().getTime()));
-            preparedStatement.setString(5, toSave.getPhone_number());
-            preparedStatement.setDouble(6, toSave.getMonthly_net_salary());
+            preparedStatement.setDate(4, new java.sql.Date(toSave.getBirthDate().getTime()));
+            preparedStatement.setString(5, toSave.getPhoneNumber());
+            preparedStatement.setDouble(6, toSave.getMonthlyNetSalary());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -80,11 +80,11 @@ public class UserRepository implements BasicRepository<User>{
             String updateQuery = "UPDATE \"User\" SET name=?, first_name=?, email=? ,birth_date=?, phone_number=?, monthly_net_salary=? WHERE id=?";
             PreparedStatement updateStatement = conn.prepareStatement(updateQuery);
             updateStatement.setString(1, toUpdate.getName());
-            updateStatement.setString(2, toUpdate.getFirst_name());
+            updateStatement.setString(2, toUpdate.getFirstName());
             updateStatement.setString(3, toUpdate.getEmail());
-            updateStatement.setDate(4, new java.sql.Date(toUpdate.getBirth_date().getTime()));
-            updateStatement.setString(5, toUpdate.getPhone_number());
-            updateStatement.setDouble(6, toUpdate.getMonthly_net_salary());
+            updateStatement.setDate(4, new java.sql.Date(toUpdate.getBirthDate().getTime()));
+            updateStatement.setString(5, toUpdate.getPhoneNumber());
+            updateStatement.setDouble(6, toUpdate.getMonthlyNetSalary());
             updateStatement.setObject(7, toUpdate.getId());
             updateStatement.executeUpdate();
 
@@ -98,11 +98,11 @@ public class UserRepository implements BasicRepository<User>{
                 User updatedAccount = new User();
                 updatedAccount.setId(resultSet.getObject("id",java.util.UUID.class));
                 updatedAccount.setName(resultSet.getString("name"));
-                updatedAccount.setFirst_name(resultSet.getString("first_name"));
+                updatedAccount.setFirstName(resultSet.getString("first_name"));
                 updatedAccount.setEmail(resultSet.getString("email"));
-                updatedAccount.setBirth_date(resultSet.getDate("birth_date"));
-                updatedAccount.setPhone_number(resultSet.getString("phone_number"));
-                updatedAccount.setMonthly_net_salary(resultSet.getDouble("monthly_net_salary"));
+                updatedAccount.setBirthDate(resultSet.getDate("birth_date"));
+                updatedAccount.setPhoneNumber(resultSet.getString("phone_number"));
+                updatedAccount.setMonthlyNetSalary(resultSet.getDouble("monthly_net_salary"));
 
                 System.out.println("User updated");
                 return updatedAccount;

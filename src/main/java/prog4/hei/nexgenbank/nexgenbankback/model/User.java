@@ -14,9 +14,9 @@ import java.util.UUID;
 public class User {
     private UUID id;
     private String name;
-    private String first_name;
+    private String firstName;
     private String email;
-    private Date birth_date;
-    private String phone_number;
-    private Double monthly_net_salary;
+    private Date birthDate;
+    private String phoneNumber;
+    private Double monthlyNetSalary;
 }

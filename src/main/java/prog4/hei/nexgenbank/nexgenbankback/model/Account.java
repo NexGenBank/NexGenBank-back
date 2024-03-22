@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Account {
     private int id;
-    private String  account_number;
+    private String  accountNumber;
     private Boolean overdraft;
     private Double balance;
-    private LocalDateTime creation_date; 
+    private LocalDateTime creationDate;
 }
