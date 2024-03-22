@@ -9,7 +9,7 @@ public class DBConnection {
     public DBConnection(){
         try{
             String Url = System.getenv("DB_URL");
-            String User = System.getenv("DB_USER");
+            String User = System.getenv("DB_USERNAME");
             String Password = System.getenv("DB_PASSWORD");
 
             this.connection = DriverManager.getConnection(Url, User, Password);
