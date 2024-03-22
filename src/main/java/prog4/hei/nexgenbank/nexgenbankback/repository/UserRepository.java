@@ -19,12 +19,12 @@ public class UserRepository implements BasicRepository<User>{
                 while (result.next()) {
                     UUID id = result.getObject("id",java.util.UUID.class);
                     String name = result.getString("name");
-                    String first_name = result.getString("first_name");
+                    String firstName = result.getString("first_name");
                     String email = result.getString("email");
-                    Date birth_date = result.getDate("birth_date");
-                    String phone_number = result.getString("phone_number");
-                    Double monthly_net_salary = result.getDouble("monthly_net_salary");
-                    User user = new User(id, name, first_name, email, birth_date, phone_number, monthly_net_salary);
+                    Date birthDate = result.getDate("birth_date");
+                    String phoneNumber = result.getString("phone_number");
+                    Double monthlyNetSalary = result.getDouble("monthly_net_salary");
+                    User user = new User(id, name, firstName, email, birthDate, phoneNumber, monthlyNetSalary);
                     userList.add(user);
                 }
             }
