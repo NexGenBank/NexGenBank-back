@@ -1,8 +1,8 @@
 \c postgres
 
-DROP DATABASE IF EXISTS nexgenbank;
+DROP DATABASE  nexgenbank;
 
-CREATE DATABASE IF NOT EXISTS nexgenbank;
+CREATE DATABASE  nexgenbank;
 
 \c nexgenbank
 
@@ -28,11 +28,12 @@ VALUES
     ('Brown', 'Emily', 'emily.brown@example.com', '1995-12-28', '+187654321', 5500.00),
     ('Davis', 'William', 'william.davis@example.com', '1980-09-10', '+165432187', 6500.00);
 
+
         --Category table
 CREATE TABLE IF NOT EXISTS "Category" (
     id UUID DEFAULT  uuid_generate_v4() PRIMARY KEY,
     category_name VARCHAR(250) NOT NULL
-    );
+);
 
 INSERT INTO "Category" (category_name) VALUES ('Salaire'),('Ecollage'),('Nourriture'),('Habit');
 
@@ -54,45 +55,45 @@ VALUES
         --Account table
 CREATE TABLE IF NOT EXISTS "Account" (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    account_name VARCHAR(250) NOT NULL,
     account_number VARCHAR(100) UNIQUE NOT NULL,
     overdraft BOOLEAN DEFAULT false,
     balance DOUBLE PRECISION NOT NULL,
     creation_date TIMESTAMP DEFAULT CURRENT_DATE,
     id_User UUID REFERENCES "User"(id)
-    );
+);
 
-INSERT INTO "Account" (account_number, overdraft, balance, creation_date, id_User)
+INSERT INTO "Account" (account_name, account_number, overdraft, balance, creation_date, id_User)
 VALUES
-    ('ACC987654', FALSE, 1500.00, '2024-03-16 10:25:00', (SELECT id FROM "User" LIMIT 1)),
-    ('ACC234567', TRUE, 200.00, '2024-03-16 11:30:00', (SELECT id FROM "User" LIMIT 1 OFFSET 1)),
-    ('ACC345678', FALSE, 8000.00, '2024-03-16 12:45:00', (SELECT id FROM "User" LIMIT 1 OFFSET 2)),
-    ('ACC456789', FALSE, 400.00, '2024-03-16 14:00:00', (SELECT id FROM "User" LIMIT 1 OFFSET 3)),
-    ('ACC567890', TRUE, 1200.00, '2024-03-16 15:15:00', (SELECT id FROM "User" LIMIT 1 OFFSET 4));
+    ('Checking Account', 'ACC987654', FALSE, 1500.00, '2024-03-16 10:25:00', (SELECT id FROM "User" LIMIT 1)),
+    ('Savings', 'ACC234567', TRUE, 200.00, '2024-03-16 11:30:00', (SELECT id FROM "User" LIMIT 1 OFFSET 1)),
+    ('Business', 'ACC345678', FALSE, 8000.00, '2024-03-16 12:45:00', (SELECT id FROM "User" LIMIT 1 OFFSET 2)),
+    ('Checking Account', 'ACC456789', FALSE, 400.00, '2024-03-16 14:00:00', (SELECT id FROM "User" LIMIT 1 OFFSET 3)),
+    ('Student', 'ACC567890', TRUE, 1200.00, '2024-03-16 15:15:00', (SELECT id FROM "User" LIMIT 1 OFFSET 4));
 
 
         --Loan table
-CREATE TABLE IF NOT EXISTS "Loan" (
+CREATE TABLE IF NOT EXISTS "Account" (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    loan_date DATE DEFAULT CURRENT_DATE,
-    amount DOUBLE PRECISION NOT NULL,
-    interest_rate_for_the_first_7_days_of_overdraft INT NOT NULL,
-    interest_rate_after_the_first_7_days_of_overdraft INT NOT NULL,
-    interest_pay_duration_max DATE NOT NULL,
-    loan_status VARCHAR(250) DEFAULT 'Unpaid' CHECK (loan_status IN ('Unpaid','Paid')),
-    description_loan TEXT,
-    id_Acount UUID REFERENCES "Account"(id)
-    );
+    account_name VARCHAR(250) NOT NULL,
+    account_number VARCHAR(100) UNIQUE NOT NULL,
+    overdraft BOOLEAN DEFAULT false,
+    balance DOUBLE PRECISION NOT NULL,
+    creation_date TIMESTAMP DEFAULT CURRENT_DATE,
+    id_User UUID REFERENCES "User"(id)
+);
 
-INSERT INTO "Loan" (amount, interest_rate_for_the_first_7_days_of_overdraft, interest_rate_after_the_first_7_days_of_overdraft, interest_pay_duration_max, description_loan,loan_status, id_Acount)
+INSERT INTO "Account" (account_name, account_number, overdraft, balance, creation_date, id_User)
 VALUES
-    (5000, 5, 10, '2025-03-16', 'Prêt à court terme pour la rénovation de la maison','Paid', (SELECT id FROM "Account" LIMIT 1)),
-    (6000, 6, 11, '2025-03-17', 'Prêt d''urgence pour les frais médicaux','Paid', (SELECT id FROM "Account" LIMIT 1 OFFSET 1)),
-    (7000, 7, 12, '2025-03-18', 'Prêt pour l''achat de nouveaux équipements','Paid', (SELECT id FROM "Account" LIMIT 1 OFFSET 2)),
-    (8000, 8, 13, '2025-03-19', 'Prêt personnel pour les frais de scolarité','Paid', (SELECT id FROM "Account" LIMIT 1 OFFSET 3)),
-    (9000, 9, 14, '2025-03-20', 'Prêt professionnel pour l''expansion des opérations','Unpaid', (SELECT id FROM "Account" LIMIT 1 OFFSET 4));
+    ('Checking Account', 'ACC987654', FALSE, 1500.00, '2024-03-16 10:25:00', (SELECT id FROM "User" LIMIT 1)),
+    ('Savings', 'ACC234567', TRUE, 200.00, '2024-03-16 11:30:00', (SELECT id FROM "User" LIMIT 1 OFFSET 1)),
+    ('Business', 'ACC345678', FALSE, 8000.00, '2024-03-16 12:45:00', (SELECT id FROM "User" LIMIT 1 OFFSET 2)),
+    ('Checking Account', 'ACC456789', FALSE, 400.00, '2024-03-16 14:00:00', (SELECT id FROM "User" LIMIT 1 OFFSET 3)),
+    ('Student', 'ACC567890', TRUE, 1200.00, '2024-03-16 15:15:00', (SELECT id FROM "User" LIMIT 1 OFFSET 4));
 
+-- transaction table
 CREATE TABLE IF NOT EXISTS "Transaction" (
-                                             id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     amount DOUBLE PRECISION NOT NULL,
     status VARCHAR(50) CHECK (status IN ('In progress', 'Failed', 'Cancelled', 'Success')) NOT NULL,
     reason VARCHAR(250),
@@ -117,52 +118,65 @@ VALUES
 
 
 -- Withdrawal function
-CREATE OR REPLACE FUNCTION manage_withdrawal(
+CREATE OR REPLACE FUNCTION do_withdrawal(
     p_amount DOUBLE PRECISION,
     p_account_id UUID,
-    p_category_id UUID,
-    p_reason VARCHAR(250)
-) RETURNS VARCHAR(250) AS $$
+    p_reason VARCHAR(250),
+    p_category UUID
+) RETURNS VARCHAR(250) AS
+$$
 DECLARE
-v_balance DOUBLE PRECISION;
-    v_overdraft BOOLEAN;
-    v_active_loan BOOLEAN;
+v_balance        DOUBLE PRECISION;
+    v_overdraft      BOOLEAN;
+    v_balance_limit  DOUBLE PRECISION;
+    v_amount_to_loan DOUBLE PRECISION;
+    v_active_loan    BOOLEAN;
 BEGIN
-    -- Calculate the balance including the minimum withdrawal amount
-SELECT a.balance + (u.monthly_net_salary / 3) INTO v_balance
-FROM "Account" a
-         JOIN "User" u ON a.id_User = u.id
-WHERE a.id = p_account_id;
+    -- Comparison of balance and w_amount ( amount to withdrawal )
+SELECT a.balance INTO v_balance FROM "Account" a WHERE a.id = p_account_id;
 
--- Check if the withdrawal amount is within the balance limit
 IF p_amount <= v_balance THEN
         -- Proceed with the withdrawal
         INSERT INTO "Transaction" (amount, status, reason, transaction_type, id_Account, id_Category)
-        VALUES (p_amount, 'Success', p_reason, 'Withdrawal', p_account_id, p_category_id);
-
+        VALUES (p_amount, 'Success', p_reason, 'Withdrawal', p_account_id, p_category);
         -- Update the account balance
 UPDATE "Account" SET balance = balance - p_amount WHERE id = p_account_id;
-
-RETURN 'Withdrawal successful';
+RETURN 'Withdrawal successful: ' || p_amount::VARCHAR(250);
 ELSE
-        -- Check if overdraft is enabled
+        --Check if overdraft is enabled
 SELECT overdraft INTO v_overdraft FROM "Account" WHERE id = p_account_id;
 
 IF NOT v_overdraft THEN
             RETURN 'Insufficient balance';
 ELSE
-            -- Check if there is an active loan
-            -- Assuming an active loan is one where the due_date is in the future
-SELECT EXISTS(SELECT 1 FROM "Loan" WHERE id_Acount = p_account_id AND loan_status != 'Paid') INTO v_active_loan;
+            -- Check if the withdrawal amount is within the balance limit
+SELECT a.balance + (u.monthly_net_salary / 3)
+INTO v_balance_limit
+FROM "Account" a
+         JOIN "User" u ON a.id_User = u.id
+WHERE a.id = p_account_id;
+
+IF v_balance_limit < p_amount THEN
+                RETURN 'Insufficient balance';
+ELSE
+                -- Check if there is an active loan
+SELECT EXISTS(SELECT 1 FROM "Loan" l WHERE l.id_Account = p_account_id AND l.loan_status != 'Paid')
+INTO v_active_loan;
 
 IF v_active_loan THEN
-                RETURN 'You already have an active loan';
+                    RETURN 'You already have an active loan';
 ELSE
-                RETURN 'Switch to the loan page';
+                    -- Calculation amount to loan
+SELECT (p_amount - a.balance) INTO v_amount_to_loan FROM "Account" a WHERE a.id = p_account_id;
+--New loan insertion
+INSERT INTO "Loan" (amount, reason, id_Account)
+VALUES (v_amount_to_loan, p_reason, p_account_id);
+-- Update the account balance
+UPDATE "Account" SET balance = v_amount_to_loan * -1 WHERE id = p_account_id;
+RETURN 'You lent ' || v_amount_to_loan::DOUBLE PRECISION || ' to the bank.';
+END IF;
 END IF;
 END IF;
 END IF;
 END;
 $$ LANGUAGE plpgsql;
-
-------------------
