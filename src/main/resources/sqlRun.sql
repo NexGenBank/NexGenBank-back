@@ -72,7 +72,7 @@ VALUES
 
         --Loan table
 CREATE TABLE IF NOT EXISTS "Loan" (
-                                      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     loan_date DATE DEFAULT CURRENT_DATE,
     amount DOUBLE PRECISION NOT NULL,
     interest_rate_for_the_first_7_days_of_overdraft INT NOT NULL,
