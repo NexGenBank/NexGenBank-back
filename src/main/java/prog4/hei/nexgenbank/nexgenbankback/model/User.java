@@ -4,15 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.UUID;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-    private int id;
+    private UUID id;
     private String name;
-    private String first_name;
+    private String firstName;
     private String email;
-    private String birth_date;
-    private String phone_number;
-    private String monthly_net_salary;
+    private Date birthDate;
+    private String phoneNumber;
+    private Double monthlyNetSalary;
 }

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Transfer {
     private int id;
-    private LocalDateTime effect_dateTime;
-    private String destination_account;
-    private LocalDateTime record_date_value;
+    private LocalDateTime effectDateTime;
+    private String destinationAccount;
+    private LocalDateTime recordDateValue;
 }

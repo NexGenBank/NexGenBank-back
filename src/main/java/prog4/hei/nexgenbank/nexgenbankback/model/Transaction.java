@@ -14,6 +14,6 @@ public class Transaction {
     private Double amount;
     private String status;
     private String reason;
-    private LocalDateTime transaction_date;
-    private String transaction_type;
+    private LocalDateTime transactionDate;
+    private String transactionType;
 }
