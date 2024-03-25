@@ -1,6 +1,6 @@
 # <p align="center"> NEX GEN BANK</p>
 
-<p align="center"> 
+<p  align="center"> 
     This application is the backend of a virtual bank NexGenBank 
 </p>
 
